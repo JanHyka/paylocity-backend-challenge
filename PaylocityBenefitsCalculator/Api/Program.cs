@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Api.Services.DependentsService;
 using Api.Services.EmployeesService;
+using Api.Services.PaycheckService;
 
 namespace Api;
 
@@ -17,6 +18,7 @@ public class Program
         // Register application services (mock implementations)
         builder.Services.AddSingleton<IDependentsService, DependentsService>();
         builder.Services.AddSingleton<IEmployeesService, EmployeesService>();
+        builder.Services.AddSingleton<IPaycheckService, PaycheckService>();
 
         // Register AutoMapper
         builder.Services.AddAutoMapper(cfg =>

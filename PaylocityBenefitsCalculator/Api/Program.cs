@@ -1,4 +1,6 @@
 using Microsoft.OpenApi.Models;
+using Api.Services.DependentsService;
+using Api.Services.EmployeesService;
 
 namespace Api;
 
@@ -11,6 +13,17 @@ public class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+
+        // Register application services (mock implementations)
+        builder.Services.AddSingleton<IDependentsService, DependentsService>();
+        builder.Services.AddSingleton<IEmployeesService, EmployeesService>();
+
+        // Register AutoMapper
+        builder.Services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>

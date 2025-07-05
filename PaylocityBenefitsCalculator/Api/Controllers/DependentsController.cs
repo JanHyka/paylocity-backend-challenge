@@ -1,25 +1,92 @@
 ﻿using Api.Dtos.Dependent;
 using Api.Models;
+using Api.Services.DependentsService;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Api.Controllers;
 
+/// <summary>
+/// Controller for managing <see cref="Dependent"/> entities.
+/// </summary>
 [ApiController]
 [Route("api/v1/[controller]")]
 public class DependentsController : ControllerBase
 {
-    [SwaggerOperation(Summary = "Get dependent by id")]
+    private readonly IDependentsService _dependentsService;
+    private readonly IMapper _mapper;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DependentsController"/> class.
+    /// </summary>
+    /// <param name="dependentsService">The <see cref="IDependentsService"/> to use for dependent operations.</param>
+    /// <param name="mapper">The <see cref="IMapper"/> to use for mapping entities to DTOs.</param>
+    public DependentsController(IDependentsService dependentsService, IMapper mapper)
+    {
+        _dependentsService = dependentsService;
+        _mapper = mapper;
+    }
+
+    /// <summary>
+    /// Gets a <see cref="GetDependentDto"/> by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the <see cref="Dependent"/>.</param>
+    /// <returns>
+    /// An <see cref="ApiResponse{T}"/> containing the <see cref="GetDependentDto"/> with the specified ID,
+    /// or a not found response if no such dependent exists.
+    /// </returns>
+    [SwaggerOperation(
+        Summary = "Get dependent by id",
+        Description = "Retrieves a dependent by its unique identifier."
+    )]
+    [SwaggerResponse(StatusCodes.Status200OK, "The dependent was found.", typeof(ApiResponse<GetDependentDto>))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, "No dependent with the specified ID was found.", typeof(ApiResponse<GetDependentDto>))]
     [HttpGet("{id}")]
     public async Task<ActionResult<ApiResponse<GetDependentDto>>> Get(int id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var dependent = await _dependentsService.GetDependentById(id);
+            var dto = _mapper.Map<GetDependentDto>(dependent);
+
+            return new ApiResponse<GetDependentDto>
+            {
+                Data = dto,
+                Success = true
+            };
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new ApiResponse<GetDependentDto>
+            {
+                Success = false,
+                Message = ex.Message
+            });
+        }
     }
 
-    [SwaggerOperation(Summary = "Get all dependents")]
+    /// <summary>
+    /// Gets all <see cref="GetDependentDto"/> entities.
+    /// </summary>
+    /// <returns>
+    /// An <see cref="ApiResponse{T}"/> containing a list of all <see cref="GetDependentDto"/> objects.
+    /// </returns>
+    [SwaggerOperation(
+        Summary = "Get all dependents",
+        Description = "Retrieves all dependents."
+    )]
+    [SwaggerResponse(StatusCodes.Status200OK, "A list of all dependents.", typeof(ApiResponse<List<GetDependentDto>>))]
     [HttpGet("")]
     public async Task<ActionResult<ApiResponse<List<GetDependentDto>>>> GetAll()
     {
-        throw new NotImplementedException();
+        var dependents = await _dependentsService.GetAllDependents();
+        var dtos = _mapper.Map<List<GetDependentDto>>(dependents);
+
+        return new ApiResponse<List<GetDependentDto>>
+        {
+            Data = dtos,
+            Success = true
+        };
     }
 }

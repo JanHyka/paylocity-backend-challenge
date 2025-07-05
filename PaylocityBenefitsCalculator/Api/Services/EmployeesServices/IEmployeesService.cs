@@ -1,6 +1,6 @@
 using Api.Models;
 
-namespace Api.Services.EmployeesService;
+namespace Api.Services.EmployeesServices;
 
 /// <summary>
 /// Defines methods for managing <see cref="Employee"/> entities.

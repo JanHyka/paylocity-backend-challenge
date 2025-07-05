@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Api.Controllers;
 using Api.Dtos.Dependent;
 using Api.Models;
-using Api.Services.DependentsService;
+using Api.Services.DependentsServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace ApiTests.UnitTests;
+namespace ApiTests.UnitTests.Controllers;
 
 public class DependentsControllerTests
 {

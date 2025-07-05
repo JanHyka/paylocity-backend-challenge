@@ -1,7 +1,7 @@
 ﻿using Api.Models;
 using System.Collections.Frozen;
 
-namespace Api.Services.DependentsService;
+namespace Api.Services.DependentsServices;
 
 /// <summary>
 /// Mock implementation of a service for managing dependents.
@@ -84,7 +84,7 @@ public class DependentsService : IDependentsService
     /// <inheritdoc />
     public Task<IEnumerable<Dependent>> GetDependentsByEmployeeId(int employeeId)
     {
-        if (_dependentsByEmployeeId.TryGetValue(employeeId, out var dependents) && dependents.Any())
+        if (_dependentsByEmployeeId.TryGetValue(employeeId, out var dependents) && dependents.Count != 0)
         {
             return Task.FromResult<IEnumerable<Dependent>>(dependents);
         }

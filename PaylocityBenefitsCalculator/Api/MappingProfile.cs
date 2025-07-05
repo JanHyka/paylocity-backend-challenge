@@ -4,6 +4,8 @@ using Api.Dtos.Employee;
 using Api.Dtos.Dependent;
 using Api.Dtos.Paycheck;
 
+namespace Api;
+
 public class MappingProfile : Profile
 {
     public MappingProfile()

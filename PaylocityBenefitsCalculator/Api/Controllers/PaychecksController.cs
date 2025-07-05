@@ -1,6 +1,6 @@
 ﻿using Api.Dtos.Paycheck;
 using Api.Models;
-using Api.Services.PaycheckService;
+using Api.Services.PaycheckServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,23 +10,17 @@ namespace Api.Controllers;
 /// <summary>
 /// Controller for calculating and retrieving <see cref="GetPaycheckDto"/> information.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="PaychecksController"/> class.
+/// </remarks>
+/// <param name="paychecksService">The <see cref="IPaycheckService"/> to use for paycheck calculations.</param>
+/// <param name="mapper">The <see cref="IMapper"/> to use for mapping entities to DTOs.</param>
 [ApiController]
 [Route("api/v1/[controller]")]
-public class PaychecksController : Controller
+public class PaychecksController(IPaycheckService paychecksService, IMapper mapper) : Controller
 {
-    private readonly IPaycheckService _paychecksService;
-    private readonly IMapper _mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PaychecksController"/> class.
-    /// </summary>
-    /// <param name="paychecksService">The <see cref="IPaycheckService"/> to use for paycheck calculations.</param>
-    /// <param name="mapper">The <see cref="IMapper"/> to use for mapping entities to DTOs.</param>
-    public PaychecksController(IPaycheckService paychecksService, IMapper mapper)
-    {
-        _paychecksService = paychecksService;
-        _mapper = mapper;
-    }
+    private readonly IPaycheckService _paychecksService = paychecksService;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Calculates and retrieves a <see cref="GetPaycheckDto"/> for a specific employee and pay period.
@@ -60,6 +54,15 @@ public class PaychecksController : Controller
         catch (KeyNotFoundException ex)
         {
             return NotFound(new ApiResponse<GetPaycheckDto>
+            {
+                Message = ex.Message,
+                Success = false
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            
+            return UnprocessableEntity(new ApiResponse<GetPaycheckDto>
             {
                 Message = ex.Message,
                 Success = false

@@ -32,8 +32,8 @@ public class EmployeeIntegrationTests : IntegrationTest
                 LastName = "Morant",
                 Salary = 92365.22m,
                 DateOfBirth = new DateTime(1999, 8, 10),
-                Dependents = new List<GetDependentDto>
-                {
+                Dependents =
+                [
                     new()
                     {
                         Id = 1,
@@ -58,7 +58,7 @@ public class EmployeeIntegrationTests : IntegrationTest
                         Relationship = Relationship.Child,
                         DateOfBirth = new DateTime(2021, 5, 18)
                     }
-                }
+                ]
             },
             new()
             {
@@ -67,8 +67,8 @@ public class EmployeeIntegrationTests : IntegrationTest
                 LastName = "Jordan",
                 Salary = 143211.12m,
                 DateOfBirth = new DateTime(1963, 2, 17),
-                Dependents = new List<GetDependentDto>
-                {
+                Dependents =
+                [
                     new()
                     {
                         Id = 4,
@@ -77,7 +77,7 @@ public class EmployeeIntegrationTests : IntegrationTest
                         Relationship = Relationship.DomesticPartner,
                         DateOfBirth = new DateTime(1974, 1, 2)
                     }
-                }
+                ]
             }
         };
         await response.ShouldReturn(HttpStatusCode.OK, employees);

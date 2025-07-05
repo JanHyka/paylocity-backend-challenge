@@ -1,6 +1,6 @@
 ﻿using Api.Dtos.Dependent;
 using Api.Models;
-using Api.Services.DependentsService;
+using Api.Services.DependentsServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -10,23 +10,17 @@ namespace Api.Controllers;
 /// <summary>
 /// Controller for managing <see cref="Dependent"/> entities.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="DependentsController"/> class.
+/// </remarks>
+/// <param name="dependentsService">The <see cref="IDependentsService"/> to use for dependent operations.</param>
+/// <param name="mapper">The <see cref="IMapper"/> to use for mapping entities to DTOs.</param>
 [ApiController]
 [Route("api/v1/[controller]")]
-public class DependentsController : ControllerBase
+public class DependentsController(IDependentsService dependentsService, IMapper mapper) : ControllerBase
 {
-    private readonly IDependentsService _dependentsService;
-    private readonly IMapper _mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DependentsController"/> class.
-    /// </summary>
-    /// <param name="dependentsService">The <see cref="IDependentsService"/> to use for dependent operations.</param>
-    /// <param name="mapper">The <see cref="IMapper"/> to use for mapping entities to DTOs.</param>
-    public DependentsController(IDependentsService dependentsService, IMapper mapper)
-    {
-        _dependentsService = dependentsService;
-        _mapper = mapper;
-    }
+    private readonly IDependentsService _dependentsService = dependentsService;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Gets a <see cref="GetDependentDto"/> by its unique identifier.

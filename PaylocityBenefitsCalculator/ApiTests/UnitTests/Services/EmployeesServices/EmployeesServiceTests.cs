@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Models;
-using Api.Services.EmployeesService;
+using Api.Services.EmployeesServices;
 using Xunit;
 
-namespace ApiTests.UnitTests;
+namespace ApiTests.UnitTests.Services.EmployeesServices;
 
 public class EmployeesServiceTests
 {

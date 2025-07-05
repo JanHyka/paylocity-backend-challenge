@@ -1,7 +1,7 @@
 using Api.Dtos.Paycheck;
 using Api.Models;
 
-namespace Api.Services.PaycheckService;
+namespace Api.Services.PaycheckServices;
 
 /// <summary>
 /// Defines methods for calculating <see cref="Paycheck"/>s.

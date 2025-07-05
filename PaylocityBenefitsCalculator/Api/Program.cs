@@ -1,7 +1,9 @@
 using Microsoft.OpenApi.Models;
-using Api.Services.DependentsService;
-using Api.Services.EmployeesService;
-using Api.Services.PaycheckService;
+using Api.Services.DependentsServices;
+using Api.Services.EmployeesServices;
+using Api.Services.PaycheckServices.Validator;
+using Api.Services.PaycheckServices;
+using Api.Services.PaycheckServices.Calculator.Models;
 
 namespace Api;
 
@@ -16,11 +18,13 @@ public class Program
         builder.Services.AddControllers();
 
         // Register application services (mock implementations)
+        builder.Services.AddSingleton<IEmployeeValidator, SinglePartnerValidator>(); // real implementation would have to set up validator based on employee home/work country laws
+        builder.Services.AddSingleton<ICalculatorModel, BiWeeklyCalculatorModel>(); // real implementation would likely be per-tenant granularity
         builder.Services.AddSingleton<IDependentsService, DependentsService>();
         builder.Services.AddSingleton<IEmployeesService, EmployeesService>();
         builder.Services.AddSingleton<IPaycheckService, PaycheckService>();
 
-        // Register AutoMapper
+        // Register AutoMapper so we don't have to manually map entities to DTOs
         builder.Services.AddAutoMapper(cfg =>
         {
             cfg.AddProfile<MappingProfile>();
@@ -38,6 +42,7 @@ public class Program
                 Description = "Api to support employee benefit cost calculations"
             });
         });
+        
 
         var allowLocalhost = "allow localhost";
         builder.Services.AddCors(options =>

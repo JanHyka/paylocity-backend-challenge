@@ -38,7 +38,7 @@ public class PaychecksControllerTests
             GrossPay = 2000m,
             BenefitsCost = 300m,
             PayPeriodStart = startDate,
-            PayPeriodEnd = startDate.AddDays(14)
+            PayPeriodEnd = startDate.GetBiWeekEnd(),
         };
         var dto = new GetPaycheckDto
         {
@@ -47,7 +47,7 @@ public class PaychecksControllerTests
             BenefitsCost = 300m,
             NetPay = 1700m,
             PayPeriodStart = startDate,
-            PayPeriodEnd = startDate.AddDays(14)
+            PayPeriodEnd = startDate.GetBiWeekEnd(),
         };
 
         _paycheckServiceMock.Setup(s => s.CalculatePaycheck(userId, startDate, periodicity))

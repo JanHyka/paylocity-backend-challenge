@@ -5,14 +5,14 @@ using Api.Controllers;
 using Api.Dtos.Employee;
 using Api.Dtos.Dependent;
 using Api.Models;
-using Api.Services.EmployeesService;
-using Api.Services.DependentsService;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
+using Api.Services.DependentsServices;
+using Api.Services.EmployeesServices;
 
-namespace ApiTests.UnitTests;
+namespace ApiTests.UnitTests.Controllers;
 
 public class EmployeesControllerTests
 {
@@ -46,7 +46,7 @@ public class EmployeesControllerTests
         };
         var dependents = new List<Dependent>
         {
-            new Dependent { Id = 10, FirstName = "Dep", LastName = "User", Relationship = Relationship.Child, DateOfBirth = new DateTime(2010, 1, 1) }
+            new() { Id = 10, FirstName = "Dep", LastName = "User", Relationship = Relationship.Child, DateOfBirth = new DateTime(2010, 1, 1) }
         };
         var employeeDto = new GetEmployeeDto
         {
@@ -55,11 +55,11 @@ public class EmployeesControllerTests
             LastName = "User",
             Salary = 1000m,
             DateOfBirth = new DateTime(1990, 1, 1),
-            Dependents = new List<GetDependentDto>()
+            Dependents = []
         };
         var dependentDtos = new List<GetDependentDto>
         {
-            new GetDependentDto { Id = 10, FirstName = "Dep", LastName = "User", Relationship = Relationship.Child, DateOfBirth = new DateTime(2010, 1, 1) }
+            new() { Id = 10, FirstName = "Dep", LastName = "User", Relationship = Relationship.Child, DateOfBirth = new DateTime(2010, 1, 1) }
         };
 
         _employeesServiceMock.Setup(s => s.GetEmployeeById(1)).ReturnsAsync(employee);
@@ -75,7 +75,7 @@ public class EmployeesControllerTests
         var response = Assert.IsType<ApiResponse<GetEmployeeDto>>(okResult.Value);
         Assert.True(response.Success);
         Assert.NotNull(response.Data);
-        Assert.Equal(employeeDto.Id, response.Data.Id);
+        Assert.Equal(employeeDto.Id, response.Data!.Id);
         Assert.Equal(dependentDtos.Count, response.Data.Dependents.Count);
     }
 
@@ -91,13 +91,13 @@ public class EmployeesControllerTests
             LastName = "User",
             Salary = 2000m,
             DateOfBirth = new DateTime(1980, 1, 1),
-            Dependents = new List<GetDependentDto>()
+            Dependents = []
         };
 
         _employeesServiceMock.Setup(s => s.GetEmployeeById(2)).ReturnsAsync(employee);
         _dependentsServiceMock.Setup(s => s.GetDependentsByEmployeeId(2)).ThrowsAsync(new KeyNotFoundException());
         _mapperMock.Setup(m => m.Map<GetEmployeeDto>(employee)).Returns(employeeDto);
-        _mapperMock.Setup(m => m.Map<List<GetDependentDto>>(It.IsAny<IEnumerable<Dependent>>())).Returns(new List<GetDependentDto>());
+        _mapperMock.Setup(m => m.Map<List<GetDependentDto>>(It.IsAny<IEnumerable<Dependent>>())).Returns([]);
 
         // Act
         var result = await _controller.Get(2);
@@ -107,7 +107,7 @@ public class EmployeesControllerTests
         var response = Assert.IsType<ApiResponse<GetEmployeeDto>>(okResult.Value);
         Assert.True(response.Success);
         Assert.NotNull(response.Data);
-        Assert.Empty(response.Data.Dependents);
+        Assert.Empty(response.Data!.Dependents);
     }
 
     [Fact]
@@ -132,21 +132,21 @@ public class EmployeesControllerTests
         // Arrange
         var employees = new List<Employee>
         {
-            new Employee { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today },
-            new Employee { Id = 2, FirstName = "C", LastName = "D", Salary = 2000m, DateOfBirth = DateTime.Today }
+            new() { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today },
+            new() { Id = 2, FirstName = "C", LastName = "D", Salary = 2000m, DateOfBirth = DateTime.Today }
         };
         var dependents1 = new List<Dependent>
         {
-            new Dependent { Id = 10, FirstName = "Dep1", LastName = "B", Relationship = Relationship.Child, DateOfBirth = DateTime.Today }
+            new() { Id = 10, FirstName = "Dep1", LastName = "B", Relationship = Relationship.Child, DateOfBirth = DateTime.Today }
         };
         var dependents2 = new List<Dependent>
         {
-            new Dependent { Id = 20, FirstName = "Dep2", LastName = "D", Relationship = Relationship.Spouse, DateOfBirth = DateTime.Today }
+            new() { Id = 20, FirstName = "Dep2", LastName = "D", Relationship = Relationship.Spouse, DateOfBirth = DateTime.Today }
         };
-        var employeeDto1 = new GetEmployeeDto { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today, Dependents = new List<GetDependentDto>() };
-        var employeeDto2 = new GetEmployeeDto { Id = 2, FirstName = "C", LastName = "D", Salary = 2000m, DateOfBirth = DateTime.Today, Dependents = new List<GetDependentDto>() };
-        var dependentDtos1 = new List<GetDependentDto> { new GetDependentDto { Id = 10, FirstName = "Dep1", LastName = "B", Relationship = Relationship.Child, DateOfBirth = DateTime.Today } };
-        var dependentDtos2 = new List<GetDependentDto> { new GetDependentDto { Id = 20, FirstName = "Dep2", LastName = "D", Relationship = Relationship.Spouse, DateOfBirth = DateTime.Today } };
+        var employeeDto1 = new GetEmployeeDto { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today, Dependents = [] };
+        var employeeDto2 = new GetEmployeeDto { Id = 2, FirstName = "C", LastName = "D", Salary = 2000m, DateOfBirth = DateTime.Today, Dependents = [] };
+        var dependentDtos1 = new List<GetDependentDto> { new() { Id = 10, FirstName = "Dep1", LastName = "B", Relationship = Relationship.Child, DateOfBirth = DateTime.Today } };
+        var dependentDtos2 = new List<GetDependentDto> { new() { Id = 20, FirstName = "Dep2", LastName = "D", Relationship = Relationship.Spouse, DateOfBirth = DateTime.Today } };
 
         _employeesServiceMock.Setup(s => s.GetAllEmployees()).ReturnsAsync(employees);
         _mapperMock.Setup(m => m.Map<GetEmployeeDto>(employees[0])).Returns(employeeDto1);
@@ -163,7 +163,7 @@ public class EmployeesControllerTests
         var okResult = Assert.IsType<ActionResult<ApiResponse<List<GetEmployeeDto>>>>(result);
         var response = Assert.IsType<ApiResponse<List<GetEmployeeDto>>>(okResult.Value);
         Assert.True(response.Success);
-        Assert.Equal(2, response.Data.Count);
+        Assert.Equal(2, response.Data!.Count);
         Assert.Single(response.Data[0].Dependents);
         Assert.Single(response.Data[1].Dependents);
     }
@@ -174,14 +174,14 @@ public class EmployeesControllerTests
         // Arrange
         var employees = new List<Employee>
         {
-            new Employee { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today }
+            new() { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today }
         };
-        var employeeDto1 = new GetEmployeeDto { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today, Dependents = new List<GetDependentDto>() };
+        var employeeDto1 = new GetEmployeeDto { Id = 1, FirstName = "A", LastName = "B", Salary = 1000m, DateOfBirth = DateTime.Today, Dependents = [] };
 
         _employeesServiceMock.Setup(s => s.GetAllEmployees()).ReturnsAsync(employees);
         _mapperMock.Setup(m => m.Map<GetEmployeeDto>(employees[0])).Returns(employeeDto1);
         _dependentsServiceMock.Setup(s => s.GetDependentsByEmployeeId(1)).ThrowsAsync(new KeyNotFoundException());
-        _mapperMock.Setup(m => m.Map<List<GetDependentDto>>(It.IsAny<IEnumerable<Dependent>>())).Returns(new List<GetDependentDto>());
+        _mapperMock.Setup(m => m.Map<List<GetDependentDto>>(It.IsAny<IEnumerable<Dependent>>())).Returns([]);
 
         // Act
         var result = await _controller.GetAll();
@@ -191,14 +191,14 @@ public class EmployeesControllerTests
         var response = Assert.IsType<ApiResponse<List<GetEmployeeDto>>>(okResult.Value);
         Assert.True(response.Success);
         Assert.Single(response.Data);
-        Assert.Empty(response.Data[0].Dependents);
+        Assert.Empty(response.Data![0].Dependents);
     }
 
     [Fact]
     public async Task GetAll_ReturnsEmptyList_WhenNoEmployees()
     {
         // Arrange
-        _employeesServiceMock.Setup(s => s.GetAllEmployees()).ReturnsAsync(new List<Employee>());
+        _employeesServiceMock.Setup(s => s.GetAllEmployees()).ReturnsAsync([]);
 
         // Act
         var result = await _controller.GetAll();

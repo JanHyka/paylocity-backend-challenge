@@ -1,6 +1,6 @@
 using Api.Models;
 
-namespace Api.Services.DependentsService;
+namespace Api.Services.DependentsServices;
 
 /// <summary>
 /// Defines methods for managing <see cref="Dependent"/> entities.

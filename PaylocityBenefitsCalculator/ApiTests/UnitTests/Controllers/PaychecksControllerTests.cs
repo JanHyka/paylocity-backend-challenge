@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Api.Controllers;
 using Api.Dtos.Paycheck;
 using Api.Models;
-using Api.Services.PaycheckService;
+using Api.Services.PaycheckServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace ApiTests.UnitTests;
+namespace ApiTests.UnitTests.Controllers;
 
 public class PaychecksControllerTests
 {
@@ -30,7 +30,7 @@ public class PaychecksControllerTests
     {
         // Arrange
         int userId = 1;
-        DateTime startDate = new DateTime(2024, 1, 1);
+        DateTime startDate = new(2024, 1, 1);
         PaycheckPeriodicity periodicity = PaycheckPeriodicity.BiWeekly;
         var paycheck = new Paycheck
         {
@@ -75,7 +75,7 @@ public class PaychecksControllerTests
     {
         // Arrange
         int userId = 999;
-        DateTime startDate = new DateTime(2024, 1, 1);
+        DateTime startDate = new(2024, 1, 1);
         PaycheckPeriodicity periodicity = PaycheckPeriodicity.BiWeekly;
         var exception = new KeyNotFoundException("not found");
 

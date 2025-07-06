@@ -1,7 +1,7 @@
 ﻿using Api.Models;
 using System.Collections.Frozen;
 
-namespace Api.Services.EmployeesService;
+namespace Api.Services.EmployeesServices;
 
 /// <summary>
 /// Mock implementation of a service for managing <see cref="Employee"/> entities.

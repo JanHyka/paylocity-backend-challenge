@@ -1,40 +1,33 @@
 ﻿using Api.Dtos.Employee;
 using Api.Dtos.Dependent;
 using Api.Models;
-using Api.Services.EmployeesService;
-using Api.Services.DependentsService;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Api.Services.DependentsServices;
+using Api.Services.EmployeesServices;
 
 namespace Api.Controllers;
 
 /// <summary>
 /// Controller for managing <see cref="Employee"/> entities.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="EmployeesController"/> class.
+/// </remarks>
+/// <param name="employeesService">The <see cref="IEmployeesService"/> to use for employee operations.</param>
+/// <param name="dependentsService">The <see cref="IDependentsService"/> to use for dependent operations.</param>
+/// <param name="mapper">The <see cref="IMapper"/> to use for mapping entities to DTOs.</param>
 [ApiController]
 [Route("api/v1/[controller]")]
-public class EmployeesController : ControllerBase
+public class EmployeesController(
+    IEmployeesService employeesService,
+    IDependentsService dependentsService,
+    IMapper mapper) : ControllerBase
 {
-    private readonly IEmployeesService _employeesService;
-    private readonly IDependentsService _dependentsService;
-    private readonly IMapper _mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EmployeesController"/> class.
-    /// </summary>
-    /// <param name="employeesService">The <see cref="IEmployeesService"/> to use for employee operations.</param>
-    /// <param name="dependentsService">The <see cref="IDependentsService"/> to use for dependent operations.</param>
-    /// <param name="mapper">The <see cref="IMapper"/> to use for mapping entities to DTOs.</param>
-    public EmployeesController(
-        IEmployeesService employeesService,
-        IDependentsService dependentsService,
-        IMapper mapper)
-    {
-        _employeesService = employeesService;
-        _dependentsService = dependentsService;
-        _mapper = mapper;
-    }
+    private readonly IEmployeesService _employeesService = employeesService;
+    private readonly IDependentsService _dependentsService = dependentsService;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Gets an <see cref="GetEmployeeDto"/> by its unique identifier, including dependents.
@@ -113,7 +106,7 @@ public class EmployeesController : ControllerBase
             }
             catch (KeyNotFoundException)
             {
-                dto.Dependents = new List<GetDependentDto>();
+                dto.Dependents = [];
             }
 
             result.Add(dto);

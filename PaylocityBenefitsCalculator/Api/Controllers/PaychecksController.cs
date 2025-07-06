@@ -38,7 +38,7 @@ public class PaychecksController(IPaycheckService paychecksService, IMapper mapp
     )]
     [SwaggerResponse(StatusCodes.Status200OK, "The paycheck was calculated successfully.", typeof(ApiResponse<GetPaycheckDto>))]
     [SwaggerResponse(StatusCodes.Status404NotFound, "No employee with the specified ID was found.", typeof(ApiResponse<GetPaycheckDto>))]
-    [HttpGet("user/{userId:int}/from/{startDate:datetime}/periodicity/{periodicity}")]
+    [HttpGet("User/{userId:int}/From/{startDate:datetime}/Periodicity/{periodicity}")]
     public async Task<ActionResult<ApiResponse<GetPaycheckDto>>> Get(int userId, DateTime startDate, PaycheckPeriodicity periodicity)
     {
         try

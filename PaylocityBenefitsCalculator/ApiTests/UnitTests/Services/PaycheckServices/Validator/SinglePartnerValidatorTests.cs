@@ -4,125 +4,124 @@ using Api.Models;
 using Api.Services.PaycheckServices.Validator;
 using Xunit;
 
-namespace ApiTests.UnitTests.Services.PaycheckServices.Validator
+namespace ApiTests.UnitTests.Services.PaycheckServices.Validator;
+
+public class SinglePartnerValidatorTests
 {
-    public class SinglePartnerValidatorTests
+    private readonly SinglePartnerValidator _validator = new();
+
+    [Fact]
+    public void IsValid_ReturnsTrue_WhenNoDependents()
     {
-        private readonly SinglePartnerValidator _validator = new();
-
-        [Fact]
-        public void IsValid_ReturnsTrue_WhenNoDependents()
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents = []
-            };
+            Dependents = []
+        };
 
-            Assert.True(_validator.IsValid(employee));
-        }
+        Assert.True(_validator.IsValid(employee));
+    }
 
-        [Fact]
-        public void IsValid_ReturnsTrue_WhenNoPartnerDependents()
+    [Fact]
+    public void IsValid_ReturnsTrue_WhenNoPartnerDependents()
+    {
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents =
-                [
-                    new Dependent { Relationship = Relationship.Child },
-                    new Dependent { Relationship = Relationship.Child }
-                ]
-            };
+            Dependents =
+            [
+                new Dependent { Relationship = Relationship.Child },
+                new Dependent { Relationship = Relationship.Child }
+            ]
+        };
 
-            Assert.True(_validator.IsValid(employee));
-        }
+        Assert.True(_validator.IsValid(employee));
+    }
 
-        [Fact]
-        public void IsValid_ReturnsTrue_WhenOneSpouse()
+    [Fact]
+    public void IsValid_ReturnsTrue_WhenOneSpouse()
+    {
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents =
-                [
-                    new Dependent { Relationship = Relationship.Spouse }
-                ]
-            };
+            Dependents =
+            [
+                new Dependent { Relationship = Relationship.Spouse }
+            ]
+        };
 
-            Assert.True(_validator.IsValid(employee));
-        }
+        Assert.True(_validator.IsValid(employee));
+    }
 
-        [Fact]
-        public void IsValid_ReturnsTrue_WhenOneDomesticPartner()
+    [Fact]
+    public void IsValid_ReturnsTrue_WhenOneDomesticPartner()
+    {
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents =
-                [
-                    new Dependent { Relationship = Relationship.DomesticPartner }
-                ]
-            };
+            Dependents =
+            [
+                new Dependent { Relationship = Relationship.DomesticPartner }
+            ]
+        };
 
-            Assert.True(_validator.IsValid(employee));
-        }
+        Assert.True(_validator.IsValid(employee));
+    }
 
-        [Fact]
-        public void IsValid_ReturnsFalse_WhenSpouseAndDomesticPartner()
+    [Fact]
+    public void IsValid_ReturnsFalse_WhenSpouseAndDomesticPartner()
+    {
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents =
-                [
-                    new Dependent { Relationship = Relationship.Spouse },
-                    new Dependent { Relationship = Relationship.DomesticPartner }
-                ]
-            };
+            Dependents =
+            [
+                new Dependent { Relationship = Relationship.Spouse },
+                new Dependent { Relationship = Relationship.DomesticPartner }
+            ]
+        };
 
-            Assert.False(_validator.IsValid(employee));
-        }
+        Assert.False(_validator.IsValid(employee));
+    }
 
-        [Fact]
-        public void IsValid_ReturnsFalse_WhenMultipleSpouses()
+    [Fact]
+    public void IsValid_ReturnsFalse_WhenMultipleSpouses()
+    {
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents =
-                [
-                    new Dependent { Relationship = Relationship.Spouse },
-                    new Dependent { Relationship = Relationship.Spouse }
-                ]
-            };
+            Dependents =
+            [
+                new Dependent { Relationship = Relationship.Spouse },
+                new Dependent { Relationship = Relationship.Spouse }
+            ]
+        };
 
-            Assert.False(_validator.IsValid(employee));
-        }
+        Assert.False(_validator.IsValid(employee));
+    }
 
-        [Fact]
-        public void IsValid_ReturnsFalse_WhenMultipleDomesticPartners()
+    [Fact]
+    public void IsValid_ReturnsFalse_WhenMultipleDomesticPartners()
+    {
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents =
-                [
-                    new Dependent { Relationship = Relationship.DomesticPartner },
-                    new Dependent { Relationship = Relationship.DomesticPartner }
-                ]
-            };
+            Dependents =
+            [
+                new Dependent { Relationship = Relationship.DomesticPartner },
+                new Dependent { Relationship = Relationship.DomesticPartner }
+            ]
+        };
 
-            Assert.False(_validator.IsValid(employee));
-        }
+        Assert.False(_validator.IsValid(employee));
+    }
 
-        [Fact]
-        public void IsValid_ReturnsTrue_WhenOnePartnerAndOtherChildren()
+    [Fact]
+    public void IsValid_ReturnsTrue_WhenOnePartnerAndOtherChildren()
+    {
+        var employee = new Employee
         {
-            var employee = new Employee
-            {
-                Dependents =
-                [
-                    new Dependent { Relationship = Relationship.Spouse },
-                    new Dependent { Relationship = Relationship.Child },
-                    new Dependent { Relationship = Relationship.Child }
-                ]
-            };
+            Dependents =
+            [
+                new Dependent { Relationship = Relationship.Spouse },
+                new Dependent { Relationship = Relationship.Child },
+                new Dependent { Relationship = Relationship.Child }
+            ]
+        };
 
-            Assert.True(_validator.IsValid(employee));
-        }
+        Assert.True(_validator.IsValid(employee));
     }
 }

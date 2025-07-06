@@ -52,6 +52,6 @@ public class PaycheckService(
             throw new ArgumentException("Invalid employee data.");
         }
 
-        return _calculatorModel.CalculatePaycheck(employee, startDate, startDate.AddDays(13));
+        return _calculatorModel.CalculatePaycheck(employee, startDate, startDate.GetBiWeekEnd());
     }
 }
